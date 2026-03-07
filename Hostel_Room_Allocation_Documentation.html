@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Room Allocation System — Project Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --secondary: #7c3aed;
+            --accent: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-800);
+            line-height: 1.7;
+            background: #ffffff;
+            font-size: 11pt;
+        }
+
+        @media print {
+            body {
+                font-size: 10.5pt;
+                line-height: 1.6;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            @page {
+                margin: 1.8cm 2cm;
+                size: A4;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        /* ── Cover / Title Section ── */
+        .cover {
+            text-align: center;
+            padding: 60px 20px 50px;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .cover-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-size: 9pt;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 20px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+
+        .cover h1 {
+            font-size: 28pt;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .cover .subtitle {
+            font-size: 13pt;
+            color: var(--gray-600);
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .cover-meta {
+            display: inline-block;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 14px 30px;
+            font-size: 9.5pt;
+            color: var(--gray-600);
+        }
+
+        .cover-meta strong {
+            color: var(--gray-800);
+        }
+
+        /* ── Section Headers ── */
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-size: 10pt;
+            font-weight: 700;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 8px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        h2 {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            font-size: 13pt;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 28px 0 12px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: var(--gray-700);
+            text-align: justify;
+        }
+
+        /* ── Tables ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 9.5pt;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            color: #fff;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        tbody td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        tbody tr:last-child td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+
+        tbody tr:last-child td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+
+        tbody td strong {
+            color: var(--gray-900);
+        }
+
+        tbody td code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 8.5pt;
+        }
+
+        /* ── Lists ── */
+        ul, ol {
+            margin: 10px 0 16px 24px;
+            color: var(--gray-700);
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        li strong {
+            color: var(--gray-800);
+        }
+
+        /* ── Info Boxes ── */
+        .info-box {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-left: 4px solid var(--primary);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--gray-700);
+        }
+
+        .info-box strong {
+            color: var(--primary);
+        }
+
+        /* ── Flow Steps ── */
+        .flow-steps {
+            list-style: none;
+            margin: 16px 0;
+            padding: 0;
+        }
+
+        .flow-steps li {
+            position: relative;
+            padding: 10px 16px 10px 48px;
+            margin-bottom: 8px;
+            background: var(--gray-50);
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .flow-steps li::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: #fff;
+            font-size: 8.5pt;
+            font-weight: 700;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            border-radius: 50%;
+        }
+
+        .flow-sub {
+            list-style: disc;
+            margin: 8px 0 0 20px;
+            padding: 0;
+        }
+
+        .flow-sub li {
+            padding: 2px 0;
+            background: none;
+            border: none;
+            margin-bottom: 2px;
+        }
+
+        .flow-sub li::before {
+            display: none;
+        }
+
+        /* ── Class Diagram Image ── */
+        .diagram-container {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+        }
+
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .diagram-caption {
+            margin-top: 12px;
+            font-size: 9pt;
+            color: var(--gray-600);
+            font-style: italic;
+        }
+
+        /* ── Relationship Colors ── */
+        .rel-inherit {
+            display: inline-block;
+            background: #ede9fe;
+            color: #6d28d9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+            font-weight: 600;
+        }
+
+        .rel-depend {
+            display: inline-block;
+            background: #ccfbf1;
+            color: #0d9488;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+            font-weight: 600;
+        }
+
+        .rel-nav {
+            display: inline-block;
+            background: #fef3c7;
+            color: #b45309;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+            font-weight: 600;
+        }
+
+        /* ── UML Text Diagram (SVG-rendered via CSS) ── */
+        .uml-text {
+            background: var(--gray-900);
+            color: #e2e8f0;
+            font-family: 'Fira Code', monospace;
+            font-size: 8pt;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.4;
+            margin: 16px 0;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 30px 0 20px;
+            margin-top: 50px;
+            border-top: 2px solid var(--gray-200);
+            color: var(--gray-600);
+            font-size: 9pt;
+        }
+
+        /* ── Print Button ── */
+        .print-btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .print-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 14px 36px;
+            font-size: 11pt;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        @media print {
+            .print-btn-container {
+                display: none;
+            }
+        }
+
+        /* ── DB Table Boxes ── */
+        .db-tables {
+            display: flex;
+            gap: 24px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .db-table-box {
+            flex: 1;
+            min-width: 240px;
+            border: 2px solid var(--gray-300);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .db-table-header {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: var(--gray-900);
+            font-weight: 700;
+            font-size: 10pt;
+            padding: 8px 14px;
+            text-align: center;
+        }
+
+        .db-table-body {
+            padding: 0;
+        }
+
+        .db-table-body .db-row {
+            display: flex;
+            padding: 6px 14px;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 9pt;
+            align-items: center;
+        }
+
+        .db-table-body .db-row:last-child {
+            border-bottom: none;
+        }
+
+        .db-col-name {
+            flex: 1;
+            font-weight: 600;
+            color: var(--gray-800);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .db-col-type {
+            flex: 1;
+            color: var(--gray-600);
+            font-family: 'Fira Code', monospace;
+            font-size: 8.5pt;
+        }
+
+        .db-pk {
+            background: var(--primary);
+            color: #fff;
+            font-size: 7pt;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 3px;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ═══════════════════ COVER ═══════════════════ -->
+    <div class="cover">
+        <div class="cover-badge">Project Documentation</div>
+        <h1>Hostel Room Allocation System</h1>
+        <p class="subtitle">A Java Swing Desktop Application with Oracle Database Integration</p>
+        <div class="cover-meta">
+            <strong>Language:</strong> Java &nbsp;|&nbsp;
+            <strong>GUI:</strong> Swing &nbsp;|&nbsp;
+            <strong>Database:</strong> Oracle &nbsp;|&nbsp;
+            <strong>IDE:</strong> NetBeans
+        </div>
+    </div>
+
+    <!-- ═══════════════════ INTRODUCTION ═══════════════════ -->
+    <h2><span class="section-number">1</span> Introduction</h2>
+
+    <p>
+        The <strong>Hostel Room Allocation System</strong> is a desktop-based application developed using
+        <strong>Java (Swing)</strong> for the graphical user interface and <strong>Oracle Database</strong>
+        for persistent data storage. The system is designed to streamline and automate the process of
+        allocating hostel rooms to students in an educational institution.
+    </p>
+
+    <h3>1.1 Problem Statement</h3>
+    <p>
+        In many educational institutions, hostel room allocation is done manually, which is
+        time-consuming, error-prone, and difficult to track. There is a need for a computerized
+        system that can efficiently manage user authentication, student registration, room allocation,
+        and record-keeping.
+    </p>
+
+    <h3>1.2 Objectives</h3>
+    <p>The primary objective of this project is to develop a user-friendly application that:</p>
+    <ul>
+        <li><strong>Authenticates users</strong> through a secure login system with username and password verification.</li>
+        <li><strong>Registers new users</strong> by allowing administrators to create accounts with unique IDs, usernames, and passwords.</li>
+        <li><strong>Allocates hostel rooms</strong> to students by capturing their student ID, name, and preferred room type (Single, Double, or Triple).</li>
+        <li><strong>Views all room allocations</strong> in a tabular format for easy reference and management.</li>
+    </ul>
+
+    <h3>1.3 Technologies Used</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Technology</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Java SE (JDK)</strong></td><td>Core programming language</td></tr>
+            <tr><td><strong>Java Swing</strong></td><td>GUI framework for building desktop forms and windows</td></tr>
+            <tr><td><strong>JDBC</strong></td><td>API for connecting Java application to Oracle Database</td></tr>
+            <tr><td><strong>Oracle Database</strong></td><td>Backend relational database for storing user and room data</td></tr>
+            <tr><td><strong>NetBeans IDE</strong></td><td>Integrated Development Environment for building the project</td></tr>
+        </tbody>
+    </table>
+
+    <h3>1.4 System Features</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Login</strong></td><td>Validates user credentials against the <code>users</code> database table</td></tr>
+            <tr><td><strong>Registration</strong></td><td>Allows new user creation with ID, username, and password</td></tr>
+            <tr><td><strong>Dashboard</strong></td><td>Central navigation hub with options to allocate rooms, view allocations, or logout</td></tr>
+            <tr><td><strong>Room Allocation</strong></td><td>Form to assign a room type (Single / Double / Triple) to a student</td></tr>
+            <tr><td><strong>View Allocations</strong></td><td>Displays all allocated rooms in a scrollable table</td></tr>
+        </tbody>
+    </table>
+
+    <h3>1.5 Database Design</h3>
+    <p>The application uses two Oracle database tables:</p>
+
+    <div class="db-tables">
+        <div class="db-table-box no-break">
+            <div class="db-table-header">📋 USERS</div>
+            <div class="db-table-body">
+                <div class="db-row">
+                    <span class="db-col-name">id <span class="db-pk">PK</span></span>
+                    <span class="db-col-type">VARCHAR2</span>
+                </div>
+                <div class="db-row">
+                    <span class="db-col-name">username</span>
+                    <span class="db-col-type">VARCHAR2</span>
+                </div>
+                <div class="db-row">
+                    <span class="db-col-name">password</span>
+                    <span class="db-col-type">VARCHAR2</span>
+                </div>
+            </div>
+        </div>
+        <div class="db-table-box no-break">
+            <div class="db-table-header">🏠 ROOMS</div>
+            <div class="db-table-body">
+                <div class="db-row">
+                    <span class="db-col-name">student_id</span>
+                    <span class="db-col-type">VARCHAR2</span>
+                </div>
+                <div class="db-row">
+                    <span class="db-col-name">student_name</span>
+                    <span class="db-col-type">VARCHAR2</span>
+                </div>
+                <div class="db-row">
+                    <span class="db-col-name">room_type</span>
+                    <span class="db-col-type">VARCHAR2</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>1.6 Application Flow</h3>
+    <ol class="flow-steps">
+        <li data-step="1">The application starts with the <strong>Login Screen</strong>.</li>
+        <li data-step="2">New users can navigate to the <strong>Registration Screen</strong> to create an account.</li>
+        <li data-step="3">Upon successful login, the user is directed to the <strong>Dashboard</strong>.</li>
+        <li data-step="4">From the Dashboard, the user can:
+            <ul class="flow-sub">
+                <li>Navigate to the <strong>Room Allocation Form</strong> to assign rooms to students.</li>
+                <li>Navigate to the <strong>View Allocations</strong> screen to see all current room assignments.</li>
+                <li><strong>Logout</strong> to return to the Login Screen.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <!-- ═══════════════════ CLASS DIAGRAM ═══════════════════ -->
+    <div class="page-break"></div>
+    <h2><span class="section-number">2</span> Class Diagram</h2>
+
+    <p>
+        The following UML class diagram illustrates the complete architecture of the Hostel Room
+        Allocation System, including all classes, their attributes, methods, inheritance relationships,
+        dependencies, and navigation flows.
+    </p>
+
+    <div class="diagram-container" id="classDiagramContainer">
+        <!-- The SVG class diagram is rendered below via JavaScript -->
+        <svg id="classDiagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 760" style="max-width:100%;height:auto;">
+            <defs>
+                <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.10"/>
+                </filter>
+                <marker id="arrowInherit" viewBox="0 0 20 20" refX="20" refY="10" markerWidth="12" markerHeight="12" orient="auto">
+                    <path d="M0,0 L20,10 L0,20 Z" fill="#fff" stroke="#6366f1" stroke-width="2"/>
+                </marker>
+                <marker id="arrowDepend" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M0,1 L12,6 L0,11" fill="none" stroke="#0d9488" stroke-width="2"/>
+                </marker>
+                <marker id="arrowNav" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M0,1 L12,6 L0,11" fill="none" stroke="#b45309" stroke-width="2"/>
+                </marker>
+            </defs>
+
+            <!-- Background -->
+            <rect width="1100" height="760" fill="#fafbfc" rx="12"/>
+
+            <!-- Title -->
+            <text x="550" y="32" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#1f2937">UML Class Diagram — Hostel Room Allocation System</text>
+
+            <!-- ── JFrame (Parent) ── -->
+            <g filter="url(#shadow)">
+                <rect x="440" y="52" width="200" height="56" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+                <rect x="440" y="52" width="200" height="24" rx="8" fill="#8b5cf6"/>
+                <rect x="440" y="68" width="200" height="8" fill="#8b5cf6"/>
+                <text x="540" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fff">JFrame</text>
+                <text x="540" y="94" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#6d28d9" font-style="italic">&lt;&lt;javax.swing&gt;&gt;</text>
+            </g>
+
+            <!-- ── LoginForm ── -->
+            <g filter="url(#shadow)">
+                <rect x="20" y="195" width="210" height="140" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                <rect x="20" y="195" width="210" height="26" rx="8" fill="#3b82f6"/>
+                <rect x="20" y="213" width="210" height="8" fill="#3b82f6"/>
+                <text x="125" y="213" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">LoginForm</text>
+                <line x1="20" y1="253" x2="230" y2="253" stroke="#bfdbfe" stroke-width="1"/>
+                <text x="30" y="242" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- userField : JTextField</text>
+                <text x="30" y="254" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- passField : JPasswordField</text>
+                <line x1="20" y1="262" x2="230" y2="262" stroke="#bfdbfe" stroke-width="1"/>
+                <text x="30" y="277" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ LoginForm()</text>
+                <text x="30" y="291" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- loginAction() : void</text>
+                <text x="30" y="305" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ main(String[]) : void</text>
+            </g>
+
+            <!-- ── RegisterForm ── -->
+            <g filter="url(#shadow)">
+                <rect x="250" y="195" width="210" height="148" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                <rect x="250" y="195" width="210" height="26" rx="8" fill="#10b981"/>
+                <rect x="250" y="213" width="210" height="8" fill="#10b981"/>
+                <text x="355" y="213" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">RegisterForm</text>
+                <line x1="250" y1="253" x2="460" y2="253" stroke="#a7f3d0" stroke-width="1"/>
+                <text x="260" y="242" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- idField : JTextField</text>
+                <text x="260" y="254" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- userField : JTextField</text>
+                <text x="260" y="266" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- passField : JPasswordField</text>
+                <line x1="250" y1="274" x2="460" y2="274" stroke="#a7f3d0" stroke-width="1"/>
+                <text x="260" y="289" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ RegisterForm()</text>
+                <text x="260" y="303" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- registerAction() : void</text>
+            </g>
+
+            <!-- ── Dashboard ── -->
+            <g filter="url(#shadow)">
+                <rect x="480" y="195" width="180" height="100" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                <rect x="480" y="195" width="180" height="26" rx="8" fill="#f97316"/>
+                <rect x="480" y="213" width="180" height="8" fill="#f97316"/>
+                <text x="570" y="213" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">Dashboard</text>
+                <line x1="480" y1="233" x2="660" y2="233" stroke="#fed7aa" stroke-width="1"/>
+                <text x="490" y="248" font-family="Fira Code,monospace" font-size="9" fill="#9ca3af" font-style="italic">(no fields)</text>
+                <line x1="480" y1="256" x2="660" y2="256" stroke="#fed7aa" stroke-width="1"/>
+                <text x="490" y="273" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ Dashboard()</text>
+            </g>
+
+            <!-- ── RoomAllocationForm ── -->
+            <g filter="url(#shadow)">
+                <rect x="20" y="410" width="230" height="148" rx="8" fill="#fdf2f8" stroke="#ec4899" stroke-width="2"/>
+                <rect x="20" y="410" width="230" height="26" rx="8" fill="#ec4899"/>
+                <rect x="20" y="428" width="230" height="8" fill="#ec4899"/>
+                <text x="135" y="428" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">RoomAllocationForm</text>
+                <line x1="20" y1="468" x2="250" y2="468" stroke="#fbcfe8" stroke-width="1"/>
+                <text x="30" y="457" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- idField : JTextField</text>
+                <text x="30" y="469" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- nameField : JTextField</text>
+                <text x="30" y="481" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- roomBox : JComboBox&lt;String&gt;</text>
+                <line x1="20" y1="489" x2="250" y2="489" stroke="#fbcfe8" stroke-width="1"/>
+                <text x="30" y="506" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ RoomAllocationForm()</text>
+                <text x="30" y="520" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- allocateAction() : void</text>
+            </g>
+
+            <!-- ── ViewAllocations ── -->
+            <g filter="url(#shadow)">
+                <rect x="280" y="410" width="210" height="130" rx="8" fill="#fefce8" stroke="#eab308" stroke-width="2"/>
+                <rect x="280" y="410" width="210" height="26" rx="8" fill="#eab308"/>
+                <rect x="280" y="428" width="210" height="8" fill="#eab308"/>
+                <text x="385" y="428" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">ViewAllocations</text>
+                <line x1="280" y1="457" x2="490" y2="457" stroke="#fde68a" stroke-width="1"/>
+                <text x="290" y="452" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- table : JTable</text>
+                <line x1="280" y1="465" x2="490" y2="465" stroke="#fde68a" stroke-width="1"/>
+                <text x="290" y="483" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ ViewAllocations()</text>
+                <text x="290" y="497" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">- loadData() : void</text>
+            </g>
+
+            <!-- ── DBConnection ── -->
+            <g filter="url(#shadow)">
+                <rect x="830" y="195" width="220" height="100" rx="8" fill="#f0fdfa" stroke="#14b8a6" stroke-width="2"/>
+                <rect x="830" y="195" width="220" height="26" rx="8" fill="#14b8a6"/>
+                <rect x="830" y="213" width="220" height="8" fill="#14b8a6"/>
+                <text x="940" y="213" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">DBConnection</text>
+                <line x1="830" y1="233" x2="1050" y2="233" stroke="#99f6e4" stroke-width="1"/>
+                <text x="840" y="248" font-family="Fira Code,monospace" font-size="9" fill="#9ca3af" font-style="italic">(no fields)</text>
+                <line x1="830" y1="256" x2="1050" y2="256" stroke="#99f6e4" stroke-width="1"/>
+                <text x="840" y="275" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ getConnection() : Connection</text>
+            </g>
+
+            <!-- ── CheckUsers ── -->
+            <g filter="url(#shadow)">
+                <rect x="860" y="410" width="190" height="100" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+                <rect x="860" y="410" width="190" height="26" rx="8" fill="#6b7280"/>
+                <rect x="860" y="428" width="190" height="8" fill="#6b7280"/>
+                <text x="955" y="428" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff">CheckUsers</text>
+                <line x1="860" y1="448" x2="1050" y2="448" stroke="#d1d5db" stroke-width="1"/>
+                <text x="870" y="463" font-family="Fira Code,monospace" font-size="9" fill="#9ca3af" font-style="italic">(no fields)</text>
+                <line x1="860" y1="471" x2="1050" y2="471" stroke="#d1d5db" stroke-width="1"/>
+                <text x="870" y="490" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">+ main(String[]) : void</text>
+            </g>
+
+            <!-- ══════ INHERITANCE ARROWS (solid, hollow triangle) ══════ -->
+            <!-- LoginForm → JFrame -->
+            <line x1="125" y1="195" x2="470" y2="108" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowInherit)"/>
+            <!-- RegisterForm → JFrame -->
+            <line x1="355" y1="195" x2="500" y2="108" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowInherit)"/>
+            <!-- Dashboard → JFrame -->
+            <line x1="570" y1="195" x2="555" y2="108" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowInherit)"/>
+            <!-- RoomAllocationForm → JFrame -->
+            <line x1="135" y1="410" x2="135" y2="370" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="0"/>
+            <line x1="135" y1="370" x2="480" y2="370" stroke="#6366f1" stroke-width="1.5"/>
+            <line x1="480" y1="370" x2="480" y2="108" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arrowInherit)"/>
+            <!-- ViewAllocations → JFrame -->
+            <line x1="385" y1="410" x2="385" y2="378" stroke="#6366f1" stroke-width="1.5"/>
+            <line x1="385" y1="378" x2="520" y2="378" stroke="#6366f1" stroke-width="1.5"/>
+            <line x1="520" y1="378" x2="520" y2="108" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arrowInherit)"/>
+
+            <!-- ══════ DEPENDENCY ARROWS (dashed → DBConnection) ══════ -->
+            <!-- LoginForm → DBConnection -->
+            <line x1="230" y1="234" x2="830" y2="220" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDepend)"/>
+            <text x="510" y="218" font-family="Inter,sans-serif" font-size="8" fill="#0d9488" font-style="italic">&lt;&lt;uses&gt;&gt;</text>
+            <!-- RegisterForm → DBConnection -->
+            <line x1="460" y1="244" x2="830" y2="240" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDepend)"/>
+            <!-- RoomAllocationForm → DBConnection -->
+            <line x1="250" y1="480" x2="830" y2="270" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDepend)"/>
+            <!-- ViewAllocations → DBConnection -->
+            <line x1="490" y1="470" x2="830" y2="280" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDepend)"/>
+            <!-- CheckUsers → DBConnection -->
+            <line x1="955" y1="410" x2="945" y2="295" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDepend)"/>
+            <text x="962" y="362" font-family="Inter,sans-serif" font-size="8" fill="#0d9488" font-style="italic">&lt;&lt;uses&gt;&gt;</text>
+
+            <!-- ══════ NAVIGATION ARROWS ══════ -->
+            <!-- LoginForm → RegisterForm  "opens" -->
+            <line x1="230" y1="260" x2="250" y2="260" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="232" y="256" font-family="Inter,sans-serif" font-size="7" fill="#b45309">opens</text>
+            <!-- LoginForm → Dashboard  "opens on login" -->
+            <line x1="230" y1="280" x2="480" y2="260" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="330" y="264" font-family="Inter,sans-serif" font-size="7" fill="#b45309">opens on login</text>
+            <!-- Dashboard → RoomAllocationForm -->
+            <line x1="540" y1="295" x2="220" y2="410" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="368" y="348" font-family="Inter,sans-serif" font-size="7" fill="#b45309">opens</text>
+            <!-- Dashboard → ViewAllocations -->
+            <line x1="580" y1="295" x2="420" y2="410" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="510" y="348" font-family="Inter,sans-serif" font-size="7" fill="#b45309">opens</text>
+            <!-- Dashboard → LoginForm  "logout" -->
+            <line x1="480" y1="280" x2="230" y2="310" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="340" y="303" font-family="Inter,sans-serif" font-size="7" fill="#dc2626">logout</text>
+
+            <!-- ══════ LEGEND ══════ -->
+            <rect x="30" y="590" width="440" height="150" rx="10" fill="#fff" stroke="#e5e7eb" stroke-width="1.5"/>
+            <text x="50" y="614" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1f2937">Legend</text>
+            <!-- Inheritance -->
+            <line x1="50" y1="636" x2="100" y2="636" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowInherit)"/>
+            <text x="110" y="640" font-family="Inter,sans-serif" font-size="9" fill="#374151">Inheritance (extends JFrame)</text>
+            <!-- Dependency -->
+            <line x1="50" y1="662" x2="100" y2="662" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDepend)"/>
+            <text x="110" y="666" font-family="Inter,sans-serif" font-size="9" fill="#374151">Dependency (uses DBConnection)</text>
+            <!-- Navigation -->
+            <line x1="50" y1="688" x2="100" y2="688" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="110" y="692" font-family="Inter,sans-serif" font-size="9" fill="#374151">Navigation (opens / navigates to)</text>
+            <!-- Logout -->
+            <line x1="50" y1="714" x2="100" y2="714" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+            <text x="110" y="718" font-family="Inter,sans-serif" font-size="9" fill="#374151">Logout (returns to Login)</text>
+
+            <!-- ══════ DB TABLES ══════ -->
+            <rect x="560" y="590" width="490" height="150" rx="10" fill="#fff" stroke="#e5e7eb" stroke-width="1.5"/>
+            <text x="580" y="614" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1f2937">Database Tables</text>
+
+            <!-- USERS table -->
+            <rect x="580" y="628" width="200" height="98" rx="6" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+            <rect x="580" y="628" width="200" height="22" rx="6" fill="#eab308"/>
+            <rect x="580" y="642" width="200" height="8" fill="#eab308"/>
+            <text x="680" y="644" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">USERS</text>
+            <text x="590" y="668" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">id          VARCHAR2  PK</text>
+            <text x="590" y="682" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">username    VARCHAR2</text>
+            <text x="590" y="696" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">password    VARCHAR2</text>
+
+            <!-- ROOMS table -->
+            <rect x="820" y="628" width="210" height="98" rx="6" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+            <rect x="820" y="628" width="210" height="22" rx="6" fill="#eab308"/>
+            <rect x="820" y="642" width="210" height="8" fill="#eab308"/>
+            <text x="925" y="644" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">ROOMS</text>
+            <text x="830" y="668" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">student_id    VARCHAR2</text>
+            <text x="830" y="682" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">student_name  VARCHAR2</text>
+            <text x="830" y="696" font-family="Fira Code,monospace" font-size="8.5" fill="#374151">room_type     VARCHAR2</text>
+        </svg>
+        <p class="diagram-caption">Figure 1: UML Class Diagram — Hostel Room Allocation System</p>
+    </div>
+
+    <!-- ── Class Details Table ── -->
+    <div class="no-break">
+    <h3>2.1 Class Descriptions</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Class</th>
+                <th>Parent</th>
+                <th>Key Responsibility</th>
+                <th>DB Table</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><strong>DBConnection</strong></td>
+                <td>—</td>
+                <td>Provides a static <code>getConnection()</code> method returning an Oracle JDBC Connection</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><strong>LoginForm</strong></td>
+                <td><code>JFrame</code></td>
+                <td>Login screen; validates credentials against the <code>users</code> table</td>
+                <td><code>users</code></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><strong>RegisterForm</strong></td>
+                <td><code>JFrame</code></td>
+                <td>Registration screen; inserts new users into the <code>users</code> table</td>
+                <td><code>users</code></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><strong>Dashboard</strong></td>
+                <td><code>JFrame</code></td>
+                <td>Main menu with buttons for room allocation, viewing, and logout</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><strong>RoomAllocationForm</strong></td>
+                <td><code>JFrame</code></td>
+                <td>Form to allocate a room (Single / Double / Triple) to a student</td>
+                <td><code>rooms</code></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><strong>ViewAllocations</strong></td>
+                <td><code>JFrame</code></td>
+                <td>Displays all room allocations in a JTable</td>
+                <td><code>rooms</code></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><strong>CheckUsers</strong></td>
+                <td>—</td>
+                <td>Utility / debug class that prints all rows from the <code>users</code> table</td>
+                <td><code>users</code></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <!-- ── Relationships ── -->
+    <div class="no-break">
+    <h3>2.2 Relationships Summary</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Relationship</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="rel-inherit">Inheritance</span></td>
+                <td>All UI classes → <code>JFrame</code></td>
+                <td>LoginForm, RegisterForm, Dashboard, RoomAllocationForm, ViewAllocations extend JFrame</td>
+            </tr>
+            <tr>
+                <td><span class="rel-depend">Dependency</span></td>
+                <td>UI classes → <code>DBConnection</code></td>
+                <td>Forms call <code>DBConnection.getConnection()</code> for database access</td>
+            </tr>
+            <tr>
+                <td><span class="rel-nav">Navigation</span></td>
+                <td>LoginForm → Dashboard</td>
+                <td>Successful login opens the Dashboard</td>
+            </tr>
+            <tr>
+                <td><span class="rel-nav">Navigation</span></td>
+                <td>LoginForm ↔ RegisterForm</td>
+                <td>Mutual navigation between Login and Register screens</td>
+            </tr>
+            <tr>
+                <td><span class="rel-nav">Navigation</span></td>
+                <td>Dashboard → RoomAllocationForm / ViewAllocations</td>
+                <td>Dashboard navigates to functional screens</td>
+            </tr>
+            <tr>
+                <td><span class="rel-nav">Navigation</span></td>
+                <td>Dashboard → LoginForm</td>
+                <td>Logout returns to the Login screen</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <!-- ── Print Button ── -->
+    <div class="print-btn-container">
+        <button class="print-btn" onclick="window.print()">
+            📄 Save as PDF / Print
+        </button>
+        <p style="margin-top:10px;font-size:9pt;color:#6b7280;">Click the button above, then choose <strong>"Save as PDF"</strong> as the destination in the print dialog.</p>
+    </div>
+
+    <!-- ── Footer ── -->
+    <div class="footer">
+        <p><strong>Hostel Room Allocation System</strong> — Project Documentation</p>
+        <p>Java Swing &bull; Oracle Database &bull; JDBC</p>
+    </div>
+
+</div>
+
+</body>
+</html>

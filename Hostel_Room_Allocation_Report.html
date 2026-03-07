@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hostel Room Allocation System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Open+Sans:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 22mm 20mm 22mm 20mm;
+        }
+
+        body {
+            font-family: 'Open Sans', 'Segoe UI', sans-serif;
+            color: #1a1a2e;
+            line-height: 1.75;
+            background: #fff;
+            font-size: 12pt;
+        }
+
+        /* ========== PAGE 1: TITLE PAGE ========== */
+        .title-page {
+            page-break-after: always;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 40px;
+            position: relative;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+        }
+
+        .title-page::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 28px;
+            right: 28px;
+            bottom: 28px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+        }
+
+        .title-icon {
+            font-size: 60px;
+            margin-bottom: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 110px;
+            height: 110px;
+            line-height: 110px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+        }
+
+        .title-page h1 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 30pt;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 50px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-page .subtitle-label {
+            font-size: 11pt;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .student-info {
+            padding: 30px 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        .student-info p {
+            font-size: 14pt;
+            margin: 8px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .student-info .name {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 20pt;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .student-info .detail {
+            font-size: 13pt;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .student-info .detail span {
+            color: #7dd3fc;
+            font-weight: 700;
+        }
+
+        /* ========== PAGE 2: INTRODUCTION ========== */
+        .intro-page {
+            page-break-after: always;
+            padding: 10px 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #302b63;
+        }
+
+        .section-number {
+            background: linear-gradient(135deg, #302b63, #24243e);
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16pt;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 22pt;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .intro-text {
+            text-align: justify;
+            font-size: 12pt;
+            line-height: 1.85;
+        }
+
+        .intro-text p {
+            margin-bottom: 18px;
+            text-indent: 40px;
+        }
+
+        /* ========== PAGE 3: CLASS DIAGRAM ========== */
+        .diagram-page {
+            padding: 10px 0;
+        }
+
+        .diagram-container {
+            margin: 15px auto 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .class-diagram {
+            width: 100%;
+            max-width: 720px;
+        }
+
+        .class-diagram svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .cls-box {
+            fill: #fff;
+            stroke: #302b63;
+            stroke-width: 2;
+        }
+
+        .cls-header {
+            fill: #302b63;
+        }
+
+        .cls-title {
+            fill: #fff;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            text-anchor: middle;
+        }
+
+        .cls-field {
+            fill: #333;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 10.5px;
+        }
+
+        .cls-method {
+            fill: #1a1a6e;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+
+        .cls-sep {
+            stroke: #c0c0d8;
+            stroke-width: 1;
+        }
+
+        .rel-line {
+            stroke: #302b63;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-dasharray: 6, 3;
+        }
+
+        .rel-arrow {
+            fill: #302b63;
+        }
+
+        .rel-label {
+            fill: #777;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 8.5px;
+            font-style: italic;
+        }
+
+        @media print {
+            .title-page {
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== PAGE 1: TITLE PAGE ===== -->
+    <div class="title-page">
+        <div class="title-icon">🏨</div>
+        <h1>Hostel Room Allocation<br>System</h1>
+        <div class="student-info">
+            <p class="name">Ammina Muhammed</p>
+            <p class="detail"><span>Programme:</span> S2 MCA</p>
+            <p class="detail"><span>Roll No:</span> 09</p>
+        </div>
+    </div>
+
+    <!-- ===== PAGE 2: INTRODUCTION ===== -->
+    <div class="intro-page">
+        <div class="section-header">
+            <div class="section-number">1</div>
+            <h2>Introduction</h2>
+        </div>
+        <div class="intro-text">
+            <p>
+                The <strong>Hostel Room Allocation System</strong> is a Java-based desktop application designed to
+                streamline and automate the process of assigning hostel rooms to students in an educational institution.
+                Managing hostel accommodations manually is a tedious, error-prone, and time-consuming task that often
+                leads to misallocation, duplicate entries, and administrative inefficiencies. This project aims to
+                eliminate these issues by providing a computerized solution.
+            </p>
+            <p>
+                The application provides a user-friendly graphical interface built using <strong>Java Swing</strong>,
+                backed by an <strong>Oracle Database</strong> for reliable and persistent data storage. The system
+                enables administrators to register new users, authenticate via a secure login mechanism, allocate
+                rooms to students by specifying their details and preferred room type (Single, Double, or Triple),
+                and view all current allocations in a clean tabular format.
+            </p>
+            <p>
+                The system follows a modular architecture where each functional screen — Login, Registration,
+                Dashboard, Room Allocation, and View Allocations — is encapsulated in its own Java class. This
+                promotes code organization, maintainability, and ease of future enhancements. A dedicated database
+                connection utility class (<strong>DBConnection</strong>) centralizes all database access, ensuring
+                consistent and reliable connection handling throughout the application.
+            </p>
+            <p>
+                The front-end GUI is developed using <strong>Java Swing</strong> components such as
+                <code>JFrame</code>, <code>JTextField</code>, <code>JPasswordField</code>, <code>JButton</code>,
+                <code>JComboBox</code>, and <code>JTable</code>, laid out with <code>GridBagLayout</code> and
+                <code>BoxLayout</code>. The back-end data layer utilizes <strong>Oracle Database</strong> accessed
+                through the <strong>JDBC API</strong>, with <code>PreparedStatement</code> for secure and
+                parameterized SQL queries, preventing SQL injection vulnerabilities.
+            </p>
+            <p>
+                The primary objective of this project is to provide a simple yet effective tool that allows hostel
+                administrators to manage room allocations efficiently. The system stores student details and room
+                assignments in the database, allowing the data to be queried and displayed at any time. This ensures
+                transparency, accuracy, and accountability in the hostel management process.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== PAGE 3: CLASS DIAGRAM ===== -->
+    <div class="diagram-page">
+        <div class="section-header">
+            <div class="section-number">2</div>
+            <h2>Class Diagram</h2>
+        </div>
+
+        <div class="diagram-container">
+            <div class="class-diagram">
+                <svg viewBox="0 0 750 880" xmlns="http://www.w3.org/2000/svg">
+
+                    <!-- ===== DBConnection ===== -->
+                    <rect x="270" y="10" width="210" height="95" class="cls-box" rx="6" />
+                    <rect x="270" y="10" width="210" height="28" class="cls-header" rx="6" />
+                    <rect x="270" y="28" width="210" height="10" class="cls-header" />
+                    <text x="375" y="30" class="cls-title">DBConnection</text>
+                    <line x1="270" y1="38" x2="480" y2="38" class="cls-sep" />
+                    <text x="280" y="56" class="cls-field"> (no instance fields)</text>
+                    <line x1="270" y1="64" x2="480" y2="64" class="cls-sep" />
+                    <text x="280" y="82" class="cls-method">+ getConnection(): Connection</text>
+                    <text x="280" y="98" class="cls-field" style="fill:#999; font-size:9px">«static»</text>
+
+                    <!-- ===== CheckUsers ===== -->
+                    <rect x="550" y="25" width="185" height="80" class="cls-box" rx="6" />
+                    <rect x="550" y="25" width="185" height="28" class="cls-header" rx="6" />
+                    <rect x="550" y="43" width="185" height="10" class="cls-header" />
+                    <text x="642" y="45" class="cls-title">CheckUsers</text>
+                    <line x1="550" y1="53" x2="735" y2="53" class="cls-sep" />
+                    <text x="560" y="71" class="cls-field"> (no fields)</text>
+                    <line x1="550" y1="78" x2="735" y2="78" class="cls-sep" />
+                    <text x="560" y="96" class="cls-method">+ main(args: String[]): void</text>
+
+                    <!-- ===== LoginForm ===== -->
+                    <rect x="10" y="195" width="235" height="175" class="cls-box" rx="6" />
+                    <rect x="10" y="195" width="235" height="28" class="cls-header" rx="6" />
+                    <rect x="10" y="213" width="235" height="10" class="cls-header" />
+                    <text x="127" y="215" class="cls-title">LoginForm</text>
+                    <line x1="10" y1="223" x2="245" y2="223" class="cls-sep" />
+                    <text x="20" y="242" class="cls-field">- userField: JTextField</text>
+                    <text x="20" y="258" class="cls-field">- passField: JPasswordField</text>
+                    <line x1="10" y1="268" x2="245" y2="268" class="cls-sep" />
+                    <text x="20" y="288" class="cls-method">+ LoginForm()</text>
+                    <text x="20" y="306" class="cls-method">- loginAction(): void</text>
+                    <text x="20" y="324" class="cls-method">+ main(args: String[]): void</text>
+                    <text x="20" y="360" class="cls-field" style="fill:#999; font-size:9px">«extends JFrame»</text>
+
+                    <!-- ===== RegisterForm ===== -->
+                    <rect x="505" y="195" width="235" height="180" class="cls-box" rx="6" />
+                    <rect x="505" y="195" width="235" height="28" class="cls-header" rx="6" />
+                    <rect x="505" y="213" width="235" height="10" class="cls-header" />
+                    <text x="622" y="215" class="cls-title">RegisterForm</text>
+                    <line x1="505" y1="223" x2="740" y2="223" class="cls-sep" />
+                    <text x="515" y="242" class="cls-field">- idField: JTextField</text>
+                    <text x="515" y="258" class="cls-field">- userField: JTextField</text>
+                    <text x="515" y="274" class="cls-field">- passField: JPasswordField</text>
+                    <line x1="505" y1="284" x2="740" y2="284" class="cls-sep" />
+                    <text x="515" y="304" class="cls-method">+ RegisterForm()</text>
+                    <text x="515" y="322" class="cls-method">- registerAction(): void</text>
+                    <text x="515" y="365" class="cls-field" style="fill:#999; font-size:9px">«extends JFrame»</text>
+
+                    <!-- ===== Dashboard ===== -->
+                    <rect x="270" y="455" width="210" height="100" class="cls-box" rx="6" />
+                    <rect x="270" y="455" width="210" height="28" class="cls-header" rx="6" />
+                    <rect x="270" y="473" width="210" height="10" class="cls-header" />
+                    <text x="375" y="475" class="cls-title">Dashboard</text>
+                    <line x1="270" y1="483" x2="480" y2="483" class="cls-sep" />
+                    <text x="280" y="502" class="cls-field"> (no instance fields)</text>
+                    <line x1="270" y1="510" x2="480" y2="510" class="cls-sep" />
+                    <text x="280" y="530" class="cls-method">+ Dashboard()</text>
+                    <text x="280" y="548" class="cls-field" style="fill:#999; font-size:9px">«extends JFrame»</text>
+
+                    <!-- ===== RoomAllocationForm ===== -->
+                    <rect x="10" y="650" width="250" height="180" class="cls-box" rx="6" />
+                    <rect x="10" y="650" width="250" height="28" class="cls-header" rx="6" />
+                    <rect x="10" y="668" width="250" height="10" class="cls-header" />
+                    <text x="135" y="670" class="cls-title">RoomAllocationForm</text>
+                    <line x1="10" y1="678" x2="260" y2="678" class="cls-sep" />
+                    <text x="20" y="698" class="cls-field">- idField: JTextField</text>
+                    <text x="20" y="714" class="cls-field">- nameField: JTextField</text>
+                    <text x="20" y="730" class="cls-field">- roomBox: JComboBox&lt;String&gt;</text>
+                    <line x1="10" y1="740" x2="260" y2="740" class="cls-sep" />
+                    <text x="20" y="760" class="cls-method">+ RoomAllocationForm()</text>
+                    <text x="20" y="778" class="cls-method">- allocateAction(): void</text>
+                    <text x="20" y="818" class="cls-field" style="fill:#999; font-size:9px">«extends JFrame»</text>
+
+                    <!-- ===== ViewAllocations ===== -->
+                    <rect x="500" y="650" width="240" height="165" class="cls-box" rx="6" />
+                    <rect x="500" y="650" width="240" height="28" class="cls-header" rx="6" />
+                    <rect x="500" y="668" width="240" height="10" class="cls-header" />
+                    <text x="620" y="670" class="cls-title">ViewAllocations</text>
+                    <line x1="500" y1="678" x2="740" y2="678" class="cls-sep" />
+                    <text x="510" y="698" class="cls-field">- table: JTable</text>
+                    <line x1="500" y1="710" x2="740" y2="710" class="cls-sep" />
+                    <text x="510" y="730" class="cls-method">+ ViewAllocations()</text>
+                    <text x="510" y="748" class="cls-method">- loadData(): void</text>
+                    <text x="510" y="800" class="cls-field" style="fill:#999; font-size:9px">«extends JFrame»</text>
+
+                    <!-- ===== RELATIONSHIPS ===== -->
+
+                    <!-- LoginForm --uses--> DBConnection -->
+                    <line x1="210" y1="195" x2="305" y2="105" class="rel-line" />
+                    <polygon points="305,105 297,113 310,115" class="rel-arrow" />
+                    <text x="230" y="148" class="rel-label">«uses»</text>
+
+                    <!-- RegisterForm --uses--> DBConnection -->
+                    <line x1="540" y1="195" x2="448" y2="105" class="rel-line" />
+                    <polygon points="448,105 440,113 453,115" class="rel-arrow" />
+                    <text x="485" y="148" class="rel-label">«uses»</text>
+
+                    <!-- LoginForm <--> RegisterForm -->
+                    <line x1="245" y1="280" x2="505" y2="280" class="rel-line" />
+                    <polygon points="245,280 253,275 253,285" class="rel-arrow" />
+                    <polygon points="505,280 497,275 497,285" class="rel-arrow" />
+                    <text x="340" y="273" class="rel-label">«navigates»</text>
+
+                    <!-- LoginForm --> Dashboard -->
+                    <line x1="190" y1="370" x2="300" y2="455" class="rel-line" />
+                    <polygon points="300,455 290,448 293,458" class="rel-arrow" />
+                    <text x="210" y="415" class="rel-label">«navigates»</text>
+
+                    <!-- Dashboard --> RoomAllocationForm -->
+                    <line x1="310" y1="555" x2="180" y2="650" class="rel-line" />
+                    <polygon points="180,650 185,640 173,642" class="rel-arrow" />
+                    <text x="210" y="610" class="rel-label">«navigates»</text>
+
+                    <!-- Dashboard --> ViewAllocations -->
+                    <line x1="440" y1="555" x2="570" y2="650" class="rel-line" />
+                    <polygon points="570,650 565,640 577,642" class="rel-arrow" />
+                    <text x="500" y="610" class="rel-label">«navigates»</text>
+
+                    <!-- Dashboard --> LoginForm (logout) -->
+                    <line x1="270" y1="500" x2="127" y2="370" class="rel-line" style="stroke:#c0392b" />
+                    <polygon points="127,370 133,378 122,380" class="rel-arrow" style="fill:#c0392b" />
+                    <text x="165" y="445" class="rel-label" style="fill:#c0392b">«logout»</text>
+
+                    <!-- RoomAllocationForm --uses--> DBConnection -->
+                    <line x1="90" y1="650" x2="305" y2="105" class="rel-line" style="stroke:#aaa" />
+                    <text x="130" y="390" class="rel-label">«uses»</text>
+
+                    <!-- ViewAllocations --uses--> DBConnection -->
+                    <line x1="660" y1="650" x2="448" y2="105" class="rel-line" style="stroke:#aaa" />
+                    <text x="570" y="390" class="rel-label">«uses»</text>
+
+                    <!-- RoomAllocationForm --> Dashboard (back) -->
+                    <line x1="260" y1="720" x2="320" y2="555" class="rel-line" style="stroke:#888" />
+                    <text x="268" y="645" class="rel-label" style="fill:#888">«back»</text>
+
+                    <!-- ViewAllocations --> Dashboard (back) -->
+                    <line x1="500" y1="720" x2="435" y2="555" class="rel-line" style="stroke:#888" />
+                    <text x="458" y="645" class="rel-label" style="fill:#888">«back»</text>
+
+                </svg>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
